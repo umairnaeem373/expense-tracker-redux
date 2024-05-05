@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
-
+// import './App.css';
+import ExpenseForm from './Components/ExpenseForm';
+import Form from './Components/Form';
+import { useSelector } from 'react-redux';
+import IncomeSec from './Components/IncomeSec';
+import ExpenseSec from './Components/ExpenseSec';
+import { Routes , Route } from 'react-router-dom';
 function App() {
+
+  const State=useSelector((store)=>store.expenseTracker)
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1 className='text-3xl text-center font-bold'>Expense Tracker</h1>
+      <h1 className='text-3xl text-center p-3 font-bold'>Your current balace is: Rs. {State.balance}</h1>
+      <Routes>
+        <Route path='/' element={<Form/>} />
+        <Route path='/expenseForm' element={<ExpenseForm/>} />
+      </Routes>
+      <div className='border mx-auto flex justify-evenly w-[80%]'>
+        <IncomeSec/>
+        <ExpenseSec/>
+      </div>
     </div>
   );
 }
