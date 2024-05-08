@@ -1,48 +1,43 @@
 import React, { useState } from "react";
-import { addIncome } from "../Actions/Actions";
-import { useSelector } from "react-redux";
+import { addExpense, addIncome } from "../Actions/Actions";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { v4 as uuid4 } from "uuid";
 
 function Form() {
+
+  const newID = uuid4();
+
+  const currentDate = new Date().toISOString().slice(0, 10);
+
   const [currentInp, set_Inp] = useState({
-    id: uuid4(),
-    type: "",
+    id: newID,
+    type: "Income",
+    date: currentDate,
     amount: "",
-    date: "",
-    category: "",
   });
 
   const { type, amount, date, category } = currentInp;
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const State = useSelector((store) => store.expenseTracker);
+  console.log(date)
 
-  const newID = uuid4();
+  const dispatch = useDispatch();
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     set_Inp({ ...currentInp, [name]: value });
-    console.log(currentInp,'inp val in the change func');
+
   };
-
-  console.log(type, amount, "Fook LInda");
-
-  console.log(currentInp);
 
   return (
     <form>
-      <div className="grid md:grid-cols-2 md:gap-6">
+      <div className="grid px-6 md:grid-cols-2 md:gap-6">
         <label htmlFor="underline_select" className="sr-only">
           Underline select
         </label>
         <select
           onChange={(e) => {
-            e.target.value === "Expense"
-              ? navigate("/expenseForm")
-              : handleChange(e);
+            handleChange(e);
           }}
           id="underline_select"
           value={type}
@@ -70,24 +65,46 @@ function Form() {
           name="category"
           className="block py-2.5 px-0 w-full text-sm text-gray-500 border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
         >
-          <option className="hidden" value="">
-            Choose Category
-          </option>
-          <option className="text-lg" value="Salary">
-            Salary
-          </option>
-          <option className="text-lg" value="Bonus">
-            Bonus
-          </option>
-          <option className="text-lg" value="Extra Income">
-            Extra Income
-          </option>
-          <option className="text-lg" value="Others">
-            Other
-          </option>
+          {type === "Income" ? (
+            <>
+              <option className="hidden" value="">
+                Choose Category
+              </option>
+              <option className="text-lg" value="Salary">
+                Salary
+              </option>
+              <option className="text-lg" value="Bonus">
+                Bonus
+              </option>
+              <option className="text-lg" value="Extra Income">
+                Extra Income
+              </option>
+              <option className="text-lg" value="Others">
+                Other
+              </option>
+            </>
+          ) : (
+            <>
+              <option className="hidden" selected>
+                Choose Category
+              </option>
+              <option className="text-lg" value="Car">
+                Car
+              </option>
+              <option className="text-lg" value="Bills">
+                Bills
+              </option>
+              <option className="text-lg" value="Deposit">
+                Deposit
+              </option>
+              <option className="text-lg" value="Others">
+                Misc.
+              </option>
+            </>
+          )}
         </select>
       </div>
-      <div className="mt-5 grid md:grid-cols-2 md:gap-6">
+      <div className="mt-5 px-6 grid md:grid-cols-2 md:gap-6">
         <div className="relative z-0 w-full mb-6 group">
           <input
             onChange={handleChange}
@@ -95,7 +112,7 @@ function Form() {
             value={amount}
             name="amount"
             id="amount"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            className="block py-2.5 px-0 w-full bg-transparent text-sm text-gray-900 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             required
           />
@@ -113,7 +130,7 @@ function Form() {
             type="date"
             name="date"
             id="date"
-            className="block py-2.5 text-black px-0 w-full text-sm text-gray-900 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            className="block py-2.5 text-black bg-transparent px-0 w-full text-sm text-gray-900 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             required
           />
@@ -128,11 +145,12 @@ function Form() {
       <button
         onClick={(e) => {
           e.preventDefault();
-          console.log(State, "click");
-          dispatch(addIncome({ id: newID, ...currentInp }));
+          type === "Income"
+            ? dispatch(addIncome({ id: newID, ...currentInp }))
+            : dispatch(addExpense({ id: newID, ...currentInp }));
           set_Inp({ type: "", amount: "", date: "", category: "" });
         }}
-        className=" my-5 bg-blue-700 block mx-auto hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className=" my-5 bg-blue-400 text-gray-200 font-bold text-xl  block mx-auto hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-2/4 sm:w-auto px-5 py-2.5 text-center"
       >
         Create
       </button>

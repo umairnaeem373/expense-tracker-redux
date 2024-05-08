@@ -10,10 +10,10 @@ function ExpenseSec() {
         
         State.expense.map((ele,i)=>{
           return(
-          <div key={i} className='text-center'>
-          <p  >{ele.category}</p>
-          <p className='font-bold' >Rs. {ele.amount}</p>
-          </div>
+            <div key={i} className='border bg-gray-100 rounded mx-3 my-2 text-center'>
+            <p  >{ele.category}</p>
+            <p className='font-bold text-red-500 ' >Rs. {ele.amount}</p>
+            </div>
           )
         })
 
